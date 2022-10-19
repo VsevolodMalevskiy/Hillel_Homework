@@ -68,6 +68,6 @@ query4_sql = """
 rows4 = cur.execute(query4_sql).fetchall()
 print("\n#2 task (SQL)")
 for item in rows4:
-     print(f"Имя - {item[0]}, количество повторений - {item[1]}")
+    print(f"Имя - {item[0]}, количество повторений - {item[1]}")
 
 connection.close()
