@@ -6,6 +6,7 @@
 
 from datetime import datetime
 
+
 def factor():
     while True:
         input_num = input("Введите целое положительное число > 0: ").strip()
@@ -28,7 +29,7 @@ def filter_polindrom(*args: str):
     list_in = list(args)
     def filter_polin(string):
         if type(string) == str and string.isalpha() and string.lower() == (string[::-1]).lower():
-            return True
+            return string
     list_out = list(filter(filter_polin, list_in))
     print(f"\nСлова полиндромы {list_out}")
 

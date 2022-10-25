@@ -10,7 +10,7 @@ list_in = [2333, {1: 23, 2: 34}, "222222222", "дОхоД", "father","fDfdfdf", 
 
 def filter_polindrom(string):
     if type(string) == str and string.isalpha() and string.lower() == (string[::-1]).lower():
-        return True
+        return string
 
 
 list_out = list(filter(filter_polindrom, list_in))
