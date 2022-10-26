@@ -5,7 +5,7 @@
 # В качестве функции в map использовать lambda.
 
 
-list_start = [1, 3, None, False, (1, 2, 3), "Trump", 1, 1562, "1222", {"x": "ds", "y": "fask"}]
-list_new = list(map(lambda x: str(x) if type(x) == int else x, list_start))
-print(list_start)
+values = [1, 2, '3', 'forth', 'end', 99, True, None]
+list_new = list(map(lambda x: str(x) if type(x) == int else x, values))
+print(values)
 print(list_new)

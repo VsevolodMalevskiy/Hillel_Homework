@@ -7,6 +7,16 @@
 from datetime import datetime
 
 
+def time_test(fun):
+    def wraper(*args):
+        start_time = datetime.now()
+        fun(*args)
+        end_time = datetime.now() - start_time
+        print(f"Затраченное время на выполнение функции = {end_time}")
+    return wraper
+
+
+# @time_test  Вариант 2
 def factor():
     while True:
         input_num = input("Введите целое положительное число > 0: ").strip()
@@ -25,7 +35,8 @@ def factor():
     return factorial
 
 
-def filter_polindrom(*args: str):
+# @time_test  Вариант 2
+def filter_polindrom(*args: str):   # Проверяет исходные данные на соответствие типу str
     list_in = list(args)
     def filter_polin(string):
         if type(string) == str and string.isalpha() and string.lower() == (string[::-1]).lower():
@@ -34,17 +45,13 @@ def filter_polindrom(*args: str):
     print(f"\nСлова полиндромы {list_out}")
 
 
-def time_test(fun):
-    def wraper(*args):
-        start_time = datetime.now()
-        fun(*args)
-        end_time = datetime.now() - start_time
-        print(f"Затраченное время на выполнение функции = {end_time}")
-    return wraper
+time_1 = time_test(factor)    # Вариант 1
+time_1()  # Вариант 1
+
+time_2 = time_test(filter_polindrom)  # Вариант 1
+time_2("", "ЭЭ4343434Э", "dfFD", "наВорован", "манекенаМ", "водоходов", "fgfgF", "1111")  # Вариант 1
 
 
-time_1 = time_test(factor)
-time_1()
-
-time_2 = time_test(filter_polindrom)
-time_2("", "ЭЭ4343434Э", "dfFD", "наВорован", "манекенаМ", "водоходов", "fgfgF", "1111")
+# Вариант 2
+# factor()
+# filter_polindrom("", "ЭЭ4343434Э", "dfFD", "наВорован", "манекенаМ", "водоходов", "fgfgF", "1111")

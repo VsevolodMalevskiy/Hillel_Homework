@@ -23,6 +23,7 @@ phone_number = {'+7': 2345678901, '+4': 3456789012, '+5': 5678901234, '+12': 789
 phone_number_out1 = dict(sorted(phone_number.items(), key=lambda x: int(x[0][1:])))
 # var_2
 phone_number_out2 = {x: phone_number[x] for x in sorted(phone_number, key=lambda x: int(x))}
+# phone_number_out2 = {x: phone_number[x] for x in sorted(phone_number, key=lambda x: int(x), reverse=True)}
 
 print(phone_number_out1)
 print(phone_number_out2)
