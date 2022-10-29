@@ -23,17 +23,16 @@
 
 
 def check_string(input_number):
-
     # Ввод дополнительной переменной сокращает условие проверки. Какой иначе был бы код в if - внизу под комментами
-    input_value = input_number.replace(",", '.', 1)
+    input_value = input_number.replace(",", '.')
 
     if len(input_number) == 0:
         string_out = "Вы ничего не ввели"
 
     # Определение как ноль строк: '0', '+0', '-0', '.000', ',000', '-.000', '+,000', '00,000', '00.000', '00000' и т.д.
-    elif ((input_value.replace(".", '', 1)).isdigit() and float(input_value.replace(".", '', 1)) == 0)\
-        or (input_value[0] in ("+", "-") and (input_value[1:].replace(".", '', 1).isdigit() and
-        float(input_value[1:].replace(".", '', 1)) == 0)):
+    elif ((input_value.replace(".", '', 1)).isdigit() and float(input_value.replace(".", '', 1)) == 0) \
+            or (input_value[0] in ("+", "-") and (input_value[1:].replace(".", '', 1).isdigit() and
+                                                  float(input_value[1:].replace(".", '', 1)) == 0)):
         string_out = "Вы ввели:  0"
 
     elif input_value.isdigit() or (input_value[0] == "+" and input_value[1:].isdigit()):
@@ -44,8 +43,8 @@ def check_string(input_number):
 
     # Проверка и определение как положительное дробное число строк: '0,1', '+0,1' '.001', '+,001', '000,001' '000.001',
     # '+000,0001', '+000.0001' и других
-    elif (input_value.replace(".", '', 1)).isdigit()\
-        or (input_value[0] == "+" and ((input_value[1:].replace(".", '', 1).isdigit()))):
+    elif (input_value.replace(".", '', 1)).isdigit() \
+            or (input_value[0] == "+" and ((input_value[1:].replace(".", '', 1).isdigit()))):
 
         # float - выполнение исходного условия по выводу: "-.777 → Вы ввели отрицательное дробное число: -0.777"
         string_out = f"Вы ввели положительное дробное число: {float(input_value)}"
@@ -64,7 +63,7 @@ def check_string(input_number):
 while True:
     input_string = input("\nВведите любое число (для выхода введите - выход/exit/quit/e/q): ")
     print()
-    input_string = input_string.strip()   # Обрезка по краям пробелов
+    input_string = input_string.strip()  # Обрезка по краям пробелов
     if input_string.lower() in ("выход", "exit", "quit", "e", "q"):
         print("До свидания!")
         break
@@ -72,12 +71,10 @@ while True:
         print(check_string(input_string))
     continue
 
-
-
 """def check_string(input_value):
     if len(input_value) == 0:
         string_out = "Вы ничего не ввели"
-   
+
     elif ((input_value.replace(".", '', 1)).isdigit() and float(input_value.replace(".", '', 1)) == 0)\
         or ((input_value.replace(",", '', 1)).isdigit() and float(input_value.replace(",", '', 1)) == 0)\
         or (input_value[0] in ("+", "-") and ((input_value[1:].replace(".", '', 1).isdigit() and
@@ -90,13 +87,13 @@ while True:
 
     elif input_value[0] == "-" and input_value[1:].isdigit():
         string_out = f"Вы ввели отрицательное целое число: {int(input_value)}"  
-   
+
     elif (input_value.replace(".", '', 1)).isdigit() or (input_value.replace(",", '', 1)).isdigit()\
         or ((input_value[0] == "+" and ((input_value[1:].replace(".", '', 1).isdigit())
         or (input_value[1:].replace(",", '', 1)).isdigit()))):        
         input_value = input_value.replace(",", '.')
         string_out = f"Вы ввели положительное дробное число: {float(input_value)}"
-    
+
     elif input_value[0] == "-" and ((input_value[1:].replace(".", '', 1)).isdigit()
         or (input_value[1:].replace(",", '', 1)).isdigit()):
         input_value = input_value.replace(",", '.')

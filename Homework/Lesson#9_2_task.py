@@ -17,10 +17,10 @@ def search_word(in_word: str, in_list):
     elif in_word in in_list:
         return f"Слово {in_word} найдено"
     for item in in_list:
-       if type(item) in (list, tuple, set):
-           word_search = search_word(in_word, item)
-           if word_search is not None:
-               return word_search
+        if type(item) in (list, tuple, set):
+            word_search = search_word(in_word, item)
+            if word_search is not None:
+                return word_search
 
 
-print(search_word("cat", INPUT_LIST))
+print(search_word("def", INPUT_LIST))
