@@ -29,3 +29,4 @@
 # pip freeze (pip list) - просмотр установленных пакетов
 # pip install -r requirements.txt устанавливаю требуемые пакеты (результат в файле)
 # pip list - просмотр установленных пакетов
+# python.exe -m pip install --upgrade pip – обновил pip из командной строки
