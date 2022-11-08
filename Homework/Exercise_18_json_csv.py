@@ -5,6 +5,8 @@
 import json
 import csv
 
+
+
 title_string = ("id", "Name", "old", "phone")
 phone = ["+380672352625", "+380958526584", "+380632568475", "+380662356985", "+380502375894", "+380732586535"]
 
@@ -22,5 +24,8 @@ with open('data.csv', "w", encoding='utf-8', newline='') as data_csv:
     for key, value in data_out.items():
         value.insert(0, key)
         file_writer.writerow(value)
+
+
+
 
 

@@ -12,11 +12,18 @@ with open('data.csv', "r", encoding='utf-8') as data_csv:
         row.pop(2)
         data_massiv.insert(num, row)
 
+# book = openpyxl.load_workbook(filename='test.xlsx')
+#
+# sheet.insert_index(0)  # вставляет строку выше указанного индекса (в самый верх)
+# book.close()
 
 book = openpyxl.Workbook()
 
+
 sheet = book.active
 sheet.title = 'Persons'
+sheet_2 = book.create_sheet('2')  # Создание второй страницы с названием 2
+print(book.sheetnames) # Печать наименования страниц
 
 headline = []
 for item in range(6):
