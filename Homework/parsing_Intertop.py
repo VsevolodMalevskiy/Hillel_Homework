@@ -10,7 +10,9 @@ import copy
 
 def url():
 
-    url = 'https://intertop.ua/ua/catalog/muzhskaya_obuv/brand-COLINS_adidas_armani-exchange_bugatti_calvin-klein_calvin-klein-jeans_caterpillar_columbia_ecco_filodoro_jack-wolfskin_kappa_merrell_nike_puma_reebok_skechers_termit_timberland_wrangler-minimum_price-500_1100-size-41_41-5_42_42-5/'
+    url = 'https://intertop.ua/ua/catalog/muzhskaya_obuv/brand-COLINS_adidas_armani-exchange_bugatti_calvin-' \
+          'klein_calvin-klein-jeans_caterpillar_columbia_ecco_filodoro_jack-wolfskin_kappa_merrell_nike_puma_reebok_' \
+          'skechers_termit_timberland_wrangler-minimum_price-500_1100-size-41_41-5_42_42-5/'
 
     r = requests.get(url)
 
@@ -44,12 +46,12 @@ def list_adress(list_https, list_price):
     return search_exit
 
 
+# основное тело
 https_temp1, price_temp1 = url()
 list_1 = list_adress(https_temp1, price_temp1)
 
-time.sleep(180)
-
 while True:
+    time.sleep(180)
     https_temp2, price_temp2 = url()
     list_2 = list_adress(https_temp2, price_temp2)
 
@@ -61,8 +63,6 @@ while True:
         print(set(list_1).difference(set(list_2)))
         print(set(list_2).difference(set(list_1)))
         list_1 = copy.deepcopy(list_2)
-
-    time.sleep(180)
 
 
 # pyinstaller -F D:\MyPython\Hillel_Homework\Homework\parsing_intertop.py
