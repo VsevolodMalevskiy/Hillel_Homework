@@ -47,7 +47,7 @@ def list_adress(list_https, list_price):
 https_temp1, price_temp1 = url()
 list_1 = list_adress(https_temp1, price_temp1)
 
-time.sleep(3)
+time.sleep(180)
 
 while True:
     https_temp2, price_temp2 = url()
@@ -62,7 +62,7 @@ while True:
         print(set(list_2).difference(set(list_1)))
         list_1 = copy.deepcopy(list_2)
 
-    time.sleep(3)
+    time.sleep(180)
 
 
 # pyinstaller -F D:\MyPython\Hillel_Homework\Homework\parsing_intertop.py
