@@ -131,6 +131,6 @@ else:
 
 
 
-# 1. python homework\exercise_spez_2.py -f '?.txt' -d 'c:\temp'
-# 2. python homework\exercise_spez_2.py homework\1.txt 2.txt
-# 3. python homework\exercise_spez_2.py -f '?.txt' -t 'храниться до 2 лет' -d 'c:\temp'
+# 1. python homework\exercise_spez_2_old.py -f '?.txt' -d 'c:\temp'
+# 2. python homework\exercise_spez_2_old.py homework\1.txt 2.txt
+# 3. python homework\exercise_spez_2_old.py -f '?.txt' -t 'храниться до 2 лет' -d 'c:\temp'
