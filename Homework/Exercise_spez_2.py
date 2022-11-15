@@ -37,6 +37,10 @@
 # https://pythonworld.ru/moduli/modul-os.html
 # https://pythonworld.ru/moduli/modul-os-path.html
 
+# 1. python homework\exercise_spez_2.py -f '?.txt' -d 'c:\temp'
+# 2. python homework\exercise_spez_2.py -a homework\1.txt -s 2.txt
+# 3. python homework\exercise_spez_2.py -f '?.txt' -t 'храниться до 2 лет' -d 'c:\temp'
+
 import os
 import os.path
 import argparse
@@ -55,6 +59,7 @@ def create_parser():
     return parser.parse_args()
 
 
+# Проверка отличий в строках двух файлов
 def check_file():
     print()
     analyzed_file = open(parser.a, 'r', encoding='UTF-8')
@@ -74,6 +79,7 @@ def check_file():
     sample_file.close()
 
 
+# Поиск фалов по шаблону и дирректории
 def searched_file(file_search, directory):
     list_path = []
     for root, dirs, files in os.walk(directory):
@@ -83,6 +89,7 @@ def searched_file(file_search, directory):
     return list_path
 
 
+#Поиск текстов в фалах
 def search_text(list_file, text):
     list_coincidence = []
     for item in range(len(list_file)):
@@ -93,6 +100,7 @@ def search_text(list_file, text):
     return list_coincidence
 
 
+# Основной блок
 parser = create_parser()
 
 if parser.a and parser.s and os.path.isfile(parser.a) and os.path.isfile(os.path.join("C:/Temp", parser.s)):
@@ -100,8 +108,10 @@ if parser.a and parser.s and os.path.isfile(parser.a) and os.path.isfile(os.path
 
 
 if parser.f:
+    # запуск поиска файлов и по дирректориям
     directory = os.getcwd() if not parser.d else parser.d
     path_file = searched_file(parser.f, directory)
+    # запуск поиска текста в найденых файлах по шаблону
     if parser.t and len(path_file) != 0:
         if len(path_file) == 0:
             print("Совпадений не найдено")
@@ -120,6 +130,6 @@ if parser.f:
 
 
 
-# python homework\exercise_spez_2.py -f '?.txt' -d 'c:\temp'
-# python homework\exercise_spez_2.py -a homework\1.txt -s 2.txt
-# python homework\exercise_spez_2.py -f '?.txt' -t 'храниться до 2 лет' -d 'c:\temp'
+# 1. python homework\exercise_spez_2.py -f '?.txt' -d 'c:\temp'
+# 2. python homework\exercise_spez_2.py -a homework\1.txt -s 2.txt
+# 3. python homework\exercise_spez_2.py -f '?.txt' -t 'храниться до 2 лет' -d 'c:\temp'
