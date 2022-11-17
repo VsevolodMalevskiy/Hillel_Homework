@@ -10,6 +10,7 @@
 from tkinter import *
 import math
 
+
 root = Tk()
 root.title('Калькулятор')
 root.geometry("400x670+1450+300")
@@ -20,27 +21,21 @@ ent_first_name = Entry(master=frm_form, font='arial 20', width=20, justify=RIGHT
 ent_first_name.pack()
 
 oper_massiv = {"/": 0, "*": 0, "+": 0, "-": 0, "%": 0}
-but_list = ["%", "C", "del", "X!",
-           "1/x", "X"+chr(178),
-            chr(8730)+"X", "/",
-             "7", "8", "9", "*",
-             "4", "5", "6", "-",
-             "1", "2", "3", "+",
-           "+/-", "0", ",", "="]
 
 
 def clear():
     ent_first_name.delete(len(ent_first_name.get())-1)   # удаление введенного текста
 
+
 def clear_all():
     ent_first_name.delete('0', END)
+
 
 def insert(meaning):
     ent_first_name.insert(len(ent_first_name.get()), meaning)
 
 
 class Calculator:
-
     def __init__(self, argument):
         self.argument = float(argument)
 
@@ -85,6 +80,7 @@ class Calculator:
 
 
 x = Calculator("1")
+
 
 def check_dig(in_str):
     return not in_str.replace(".", '', 1).isdigit() and in_str[0] != "-"
@@ -176,6 +172,7 @@ def division():
         operator = Calculator(x)
         clear_all()
 
+
 def multiplication():
     oper_massiv["*"] = 1
     print(oper_massiv)
@@ -187,6 +184,7 @@ def multiplication():
         operator = Calculator(x)
         clear_all()
 
+
 def addition():
     oper_massiv["+"] = 1
     print(oper_massiv)
@@ -197,6 +195,7 @@ def addition():
         global operator
         operator = Calculator(x)
         clear_all()
+
 
 def subtraction():
     oper_massiv["-"] = 1
@@ -223,6 +222,7 @@ def percent():
         part_per = operator % x
         clear_all()
         insert(part_per)
+
 
 def equals():
     if sum(oper_massiv.values()) == 2:
@@ -288,16 +288,24 @@ d = {0: percent, 1: clear_all, 2: clear, 3: factorial, 4: fraction, 5: exponenti
      12: num_4, 13: num_5, 14: num_6, 15: subtraction, 16: num_1, 17: num_2,
      18: num_3, 19: addition, 20: minus, 21: num_0, 22: num_point, 23: equals}
 
+but_list = ["%", "C", "del", "X!",
+           "1/x", "X"+chr(178),
+            chr(8730)+"X", "/",
+             "7", "8", "9", "*",
+             "4", "5", "6", "-",
+             "1", "2", "3", "+",
+           "+/-", "0", ",", "="]
+
 axis_x = 10
 axis_y = 100
 for key, num in enumerate(but_list):
     button = Button(root, command=d[key], text=but_list[key], width=7, height=3, bg='white',
-                    fg='red' if num in ["C", "del", "="] else 'black', font='arial 14').place(x=axis_x, y=axis_y)
+                    fg='red' if num in ["C", "del", "="] else 'black', font='arial 14')
+    button = button.place(x=axis_x, y=axis_y)
     axis_x += 98
     if (key + 1) % 4 == 0:
         axis_y += 95
         axis_x = 10
-
 
 root.mainloop()
 
