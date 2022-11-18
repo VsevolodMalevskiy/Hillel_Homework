@@ -6,6 +6,7 @@
 #
 # Создать своё исключение, к примеру возведение в отрицательную степень.
 
+# pyinstaller -F Homework\Exercise_Calculator.py
 
 from tkinter import *
 import math
@@ -13,7 +14,8 @@ import math
 
 root = Tk()
 root.title('Калькулятор')
-root.geometry("400x670+1450+300")
+root.geometry("400x670")
+# root.geometry("400x670+1450+300")
 
 frm_form = Frame(relief=SUNKEN, borderwidth=3, height=1)
 frm_form.pack()
@@ -21,7 +23,7 @@ ent_first_name = Entry(master=frm_form, font='arial 20', width=20, justify=RIGHT
 ent_first_name.pack()
 
 oper_massiv = {"/": 0, "*": 0, "+": 0, "-": 0, "%": 0}
-
+check_key = {"key": 0}
 
 def clear():
     ent_first_name.delete(len(ent_first_name.get())-1)   # удаление введенного текста
@@ -29,6 +31,7 @@ def clear():
 
 def clear_all():
     ent_first_name.delete('0', END)
+    check_key["key"] = 0
 
 
 def insert(meaning):
@@ -95,6 +98,8 @@ def check_null(in_str):
 
 
 def fraction():
+    if not ent_first_name.get():
+        return
     x = ent_first_name.get()
     if check_dig(x):
         return clear()
@@ -108,6 +113,8 @@ def fraction():
 
 # возведение в квадрат
 def exponentiation():
+    if not ent_first_name.get():
+        return
     x = ent_first_name.get()
     if check_dig(x):
         return clear()
@@ -121,6 +128,8 @@ def exponentiation():
 
 # корень квадратный
 def square():
+    if not ent_first_name.get():
+        return
     x = ent_first_name.get()
     if check_neg(x):
         return clear_all(), insert("negative square root")
@@ -133,6 +142,8 @@ def square():
 
 
 def factorial():
+    if not ent_first_name.get():
+        return
     x = ent_first_name.get()
     if check_dig(x):
         return clear()
@@ -162,6 +173,9 @@ def minus():
 
 
 def division():
+    if oper_massiv["/"] != 0 or not ent_first_name.get():
+        oper_massiv["/"] = 0
+        return
     oper_massiv["/"] = 1
     print(oper_massiv)
     x = ent_first_name.get()
@@ -170,10 +184,13 @@ def division():
     else:
         global operator
         operator = Calculator(x)
-        clear_all()
+        # clear_all()
 
 
 def multiplication():
+    if oper_massiv["*"] != 0 or not ent_first_name.get():
+        oper_massiv["*"] = 0
+        return
     oper_massiv["*"] = 1
     print(oper_massiv)
     x = ent_first_name.get()
@@ -182,10 +199,13 @@ def multiplication():
     else:
         global operator
         operator = Calculator(x)
-        clear_all()
+        # clear_all()
 
 
 def addition():
+    if oper_massiv["+"] != 0 or not ent_first_name.get():
+        oper_massiv["+"] = 0
+        return
     oper_massiv["+"] = 1
     print(oper_massiv)
     x = ent_first_name.get()
@@ -194,10 +214,13 @@ def addition():
     else:
         global operator
         operator = Calculator(x)
-        clear_all()
+        # clear_all()
 
 
 def subtraction():
+    if oper_massiv["-"] != 0 or not ent_first_name.get():
+        oper_massiv["-"] = 0
+        return
     oper_massiv["-"] = 1
     print(oper_massiv)
     x = ent_first_name.get()
@@ -206,10 +229,13 @@ def subtraction():
     else:
         global operator
         operator = Calculator(x)
-        clear_all()
+        # clear_all()
 
 
 def percent():
+    if oper_massiv["%"] != 0 or not ent_first_name.get():
+        oper_massiv["%"] = 0
+        return
     oper_massiv["%"] = 1
     print(oper_massiv)
     x = ent_first_name.get()
@@ -225,6 +251,8 @@ def percent():
 
 
 def equals():
+    if sum(oper_massiv.values()) == 0:
+        return
     if sum(oper_massiv.values()) == 2:
         y = str(part_per)
         oper_massiv["%"] = 0
@@ -234,53 +262,83 @@ def equals():
         return clear()
     elif oper_massiv["/"] == 1:
          if check_null(y):
+             check_key["key"] = 0
              return clear_all(), insert("division into 0")
          else:
              oper_massiv["/"] = 0
+             check_key["key"] = 0
              return clear_all(), insert(operator/y)
     elif oper_massiv["*"] == 1:
          oper_massiv["*"] = 0
+         check_key["key"] = 0
          return clear_all(), insert(operator*y)
     elif oper_massiv["+"] == 1:
          oper_massiv["+"] = 0
+         check_key["key"] = 0
          return clear_all(), insert(operator+y)
     elif oper_massiv["-"] == 1:
          oper_massiv["-"] = 0
+         check_key["key"] = 0
          return clear_all(), insert(operator-y)
 
 
+
+def clear_e(event):
+    if sum(oper_massiv.values()) not in range(1, 2):
+        return
+    elif check_key["key"] == 0:
+        clear_all()
+        insert(event.keysym)
+        check_key["key"] = 1
+    else:
+        return
+
+
+# обработка вставки символа после нажатия оператора действия
+def insert_num(clav):
+    if sum(oper_massiv.values()) not in range(1, 2):
+        return insert(clav)
+    elif check_key["key"] == 0:
+        clear_all()
+        insert(clav)
+        check_key["key"] = 1
+    else:
+        return insert(clav)
+
+
 def num_0():
-    return insert("0")
+    insert_num("0")
+
 
 def num_1():
-    return insert("1")
+    insert_num("1")
 
 def num_2():
-    return insert("2")
+    insert_num("2")
 
 def num_3():
-    return insert("3")
+    insert_num("3")
 
 def num_4():
-    return insert("4")
+    insert_num("4")
 
 def num_5():
-    return insert("5")
+    insert_num("5")
 
 def num_6():
-    return insert("6")
+    insert_num("6")
 
 def num_7():
-    return insert("7")
+    insert_num("7")
 
 def num_8():
-    return insert("8")
+    insert_num("8")
 
 def num_9():
-    return insert("9")
+    insert_num("9")
 
 def num_point():
-    return insert(".")
+    insert_num(".")
 
 
 d = {0: percent, 1: clear_all, 2: clear, 3: factorial, 4: fraction, 5: exponentiation,
@@ -306,6 +364,54 @@ for key, num in enumerate(but_list):
     if (key + 1) % 4 == 0:
         axis_y += 95
         axis_x = 10
+
+
+def del_error(tab):
+    z = ent_first_name.get()
+    if z[-1] != tab:
+        check_key["key"] = 1
+        clear_all()
+        insert(z)
+        addition()
+    else:
+        clear_all()
+        insert(z[:-1])
+        addition()
+
+
+def equals_e(eveny):
+    equals()
+
+def division_e(event):
+    del_error("/")
+
+def multiplication_e(event):
+    del_error("*")
+
+def subtraction_e(event):
+    del_error("-")
+
+def addition_e(event):
+    del_error("+")
+
+
+def clear_e(event):
+    if sum(oper_massiv.values()) not in range(1, 2):
+        return
+    elif check_key["key"] == 0:
+        clear_all()
+        insert(event.keysym)
+        check_key["key"] = 1
+    else:
+        return
+
+
+root.bind('<Return>', equals_e) # клавиша "Enter"
+root.bind('/', division_e)
+root.bind('*', multiplication_e)
+root.bind('-', subtraction_e)
+root.bind('+', addition_e)
+root.bind('<Key>', clear_e)
 
 root.mainloop()
 
