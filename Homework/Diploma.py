@@ -47,40 +47,8 @@ import sqlite3 as sq
 from functions import *
 
 
-with sq.connect("residents.db") as data_base:
-    cur = data_base.cursor()
+s = insert_in_db('Жители района.xlsx')
+print("Загружено строк из файла .xlsx:", s)
 
-    # создается таблица, если ранее не была создана, создается столбец users-id с уникальными ключами
-    cur.execute("""CREATE TABLE IF NOT EXISTS users(
-        user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-        FirstName NVARCHAR(20) NOT NULL,
-        LastName NVARCHAR(20),
-        Patronymic NVARCHAR(20),
-        Data_Birth NOT NULL,
-        Data_Death,
-        Sex NVARCHAR(4) NOT NULL
-    )""")
-    data_base.commit()
-
-
-    # # получение всех данных из файла
-    # # cur.execute("SELECT * FROM users;")
-    # # three_results = cur.fetchmany(3) # 3 - количество строк
-    # # print(three_results)
-
-
-
-    massiv_xlsx = load_fromfile('Жители района.xlsx')
-    print(massiv_xlsx[0])
-
-
-    table_insert = """INSERT INTO users(FirstName, LastName, Patronymic, Data_Birth, Data_Death, Sex)
-          VALUES (?, ?, ?, ?, ?, ?);"""
-
-    cur.executemany(table_insert, massiv_xlsx)
-
-    data_base.commit()
-
-
-
-    cur.close()
+c = db_check_out('из')
+print(len(c), c)

@@ -1,6 +1,7 @@
 import datetime
 import openpyxl
 import re
+import sqlite3 as sq
 
 
 # функция проверки существования даты до текущего момента
@@ -35,18 +36,19 @@ def check_string(string_in):
     if not string_in:
         return
     elif string_in.strip().isalpha():
-        string_in = string_in.title()
+        string_in = string_in.lower()
         return string_in
 
-# проверка строки и перевод в пол 'муж' или 'жен'
+
+# проверка строки и перевод в пол 'мужчина' или 'женщина'
 def check_sex(cell_in):
     if not cell_in:
         return
     elif cell_in.strip().isalpha():
-        if len(cell_in.lower().split("female")) == 2 or len(cell_in.lower().split("жен")) == 2:
-            return 'жен'
-        elif len(cell_in.lower().split("male")) == 2 or len(cell_in.lower().split("муж")) == 2:
-            return 'муж'
+        if len(cell_in.lower().split("f")) == 2 or len(cell_in.lower().split("жен")) == 2:
+            return 'женщина'
+        elif len(cell_in.lower().split("m")) == 2 or len(cell_in.lower().split("муж")) == 2:
+            return 'мужчина'
 
 
 def load_fromfile(file_xlsx):
@@ -101,9 +103,73 @@ def load_fromfile(file_xlsx):
     # print(len(massiv_add))
 
 
+# Загрузка в базу данных списка из файла .xlsx
+def insert_in_db(file_excel):
+    with sq.connect("residents.db") as data_base:
+        cur = data_base.cursor()
+
+        # создается таблица, если ранее не была создана, создается столбец users-id с уникальными ключами
+        cur.execute("""CREATE TABLE IF NOT EXISTS users(
+            user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            FirstName NVARCHAR(20) NOT NULL,
+            LastName NVARCHAR(20),
+            Patronymic NVARCHAR(20),
+            Data_Birth DATE NOT NULL,
+            Data_Death DATE,
+            Sex NVARCHAR(4) NOT NULL
+        )""")
+        data_base.commit()
+
+        massiv_xlsx = load_fromfile(file_excel)
+
+        # Добавление строк из файла xls
+        table_insert = """INSERT INTO users(FirstName, LastName, Patronymic, Data_Birth, Data_Death, Sex)
+              VALUES (?, ?, ?, ?, ?, ?);"""
+
+        cur.executemany(table_insert, massiv_xlsx)
+        data_base.commit()
+    cur.close()
+    return len(massiv_xlsx)
 
 
+# Поиск в базе данных по ключу
+def db_check_out(part):
+    with sq.connect("residents.db") as data_base:
+        cur = data_base.cursor()
+        search_sql_first = """
+          SELECT *
+            FROM users           
+            WHERE FirstName LIKE ? 
+            GROUP BY FirstName, LastName, Patronymic, Data_Birth, Data_Death, Sex
+        """
 
+        search_sql_last = """
+              SELECT *
+                FROM users           
+                WHERE LastName LIKE ? 
+                GROUP BY FirstName, LastName, Patronymic, Data_Birth, Data_Death, Sex
+            """
+
+        search_sql_petron = """
+              SELECT *
+                FROM users           
+                WHERE Patronymic LIKE ? 
+                GROUP BY FirstName, LastName, Patronymic, Data_Birth, Data_Death, Sex
+            """
+
+        x = 'ив'
+        search_string = []
+        search_string.append(f"%{x}%")
+
+        db_1 = cur.execute(search_sql_first, search_string).fetchall()
+        db_2 = cur.execute(search_sql_last, search_string).fetchall()
+        db_3 = cur.execute(search_sql_petron, search_string).fetchall()
+        db_all = db_1 + db_2 + db_3
+
+        db_list = list(set(db_all))
+
+    cur.close()
+    return db_list
 
 
 if __name__ == '__main__':
