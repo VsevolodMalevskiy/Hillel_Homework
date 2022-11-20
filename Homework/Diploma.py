@@ -73,12 +73,14 @@ with sq.connect("residents.db") as data_base:
     massiv_xlsx = load_fromfile('Жители района.xlsx')
     print(massiv_xlsx[0])
 
-    cur.execute("""INSERT INTO users(FirstName, LastName, Patronymic, Data_Birth, Data_Death, Sex)
-          VALUES(?, ?, ?, ?, ?, ?);""")
+
+    table_insert = """INSERT INTO users(FirstName, LastName, Patronymic, Data_Birth, Data_Death, Sex)
+          VALUES (?, ?, ?, ?, ?, ?);"""
+
+    cur.executemany(table_insert, massiv_xlsx)
 
     data_base.commit()
 
-    # cur.execute("""INSERT INTO users(FirstName, LastName, Patronymic, Data_Birth, Data_Death, Sex)
-    #           VALUES('Изварин', 'Иван', 'Николаевич', '1972.04.13', '2022.02.12', 'муж');""")
+
 
     cur.close()
