@@ -51,12 +51,10 @@ import tkinter.messagebox as mb
 import math
 import re
 
-open_db()
 
 root = Tk()
 root.title('Жильцы микрорайона Победа')
 root.resizable = (False, False) # запрет на изменение размеров окна
-
 root.geometry("400x670+1400+450")
 
 ent_last_name = Entry_in("Фамилия")
@@ -65,10 +63,15 @@ ent_patr = Entry_in("Отчество")
 ent_date_birth = Entry_in("Дата рождения")
 ent_date_death = Entry_in("Дата смерти")
 ent_sex = Entry_in("Пол")
+save_file = File_xlsx()
 
 
-def clear_all():
-    ent_first_name.delete('0', END)
+def file_save():
+    path_file = File_xlsx()
+    path = path_file.choose_file()
+    amount = insert_in_db(path)
+    win = win_inform()
+    win.show_warning_3(amount)
 
 
 def db_inpanel():
@@ -118,6 +121,7 @@ def db_inpanel():
             ent_date_birth.input_panel().delete('0', END)
             ent_date_death.input_panel().delete('0', END)
             ent_sex.input_panel().delete('0', END)
+
         else:
             x_t = win_inform()
             x_t.show_warning_1()
@@ -126,16 +130,18 @@ def db_inpanel():
         x_t.show_warning_1()
 
 
-btn = Button(text="Ok", height=1, width=10, fg="black", font='14', command=db_inpanel)
-btn.pack(side=TOP)
-btn.place(x=160, y=510)
+btn_1 = Button(text="Ok", height=1, width=10, fg="black", font='14', command=db_inpanel)
+btn_1.pack(side=TOP)
+btn_1.place(x=160, y=510)
 
 
-#
+btn_2 = Button(text="Ok", height=1, width=10, fg="black", font='14', command=file_save)
+btn_2.pack(side=TOP)
+btn_2.place(x=0, y=510)
+
+
 # s = insert_in_db('Жители района.xlsx')
 # print("Загружено строк из файла .xlsx:", s)
-
-
 
 
 # c = db_check_out('из')

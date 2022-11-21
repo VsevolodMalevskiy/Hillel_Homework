@@ -1,11 +1,6 @@
 from tkinter import *
 import tkinter.messagebox as mb
-
-# def win_enter(title_in, x):
-#     Label(text=title_in, width=0, height=3).pack()
-#     frm_first = Frame(relief=SUNKEN, borderwidth=3, height=1)
-#     frm_first.pack()
-#     x = Entry(master=frm_first, font='arial 12', width=30, justify=RIGHT).pack()
+import tkinter.filedialog as fd
 
 
 class Entry_in():
@@ -41,9 +36,33 @@ class win_inform():
         msg = "Дата смерти раньше даты рождения"
         mb.showwarning("Предупреждение", msg)
 
+    def show_warning_3(self, n):
+        msg = f"Добавлено записей в файл: {n}"
+        mb.showwarning("Предупреждение", msg)
+
+
+
     def show_error(self):
         msg = "Приложение обнаружило неизвестную ошибку"
         mb.showerror("Ошибка", msg)
 
 
+class File_xlsx():
+    def __init__(self):
+        self.btn_file = Button(text="Выбрать файл", command=self.choose_file)
+        self.btn_dir = Button(text="Выбрать папку", command=self.choose_directory)
+        # self.btn_file.pack(padx=60, pady=10)
+        # self.btn_dir.pack(padx=60, pady=10)
 
+    def choose_file(self):
+        filetypes = (("База данных", "*.xlsx"),
+                     ("Любой", "*"))
+        filename = fd.askopenfilename(title="Открыть файл", initialdir="/",
+                                      filetypes=filetypes)
+        if filename:
+            return filename
+
+    def choose_directory(self):
+        directory = fd.askdirectory(title="Открыть папку", initialdir="/")
+        if directory:
+            print(directory)
