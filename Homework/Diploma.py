@@ -51,94 +51,94 @@ import tkinter.messagebox as mb
 import math
 import re
 
-# open_db()
+open_db()
+
+root = Tk()
+root.title('Жильцы микрорайона Победа')
+root.resizable = (False, False) # запрет на изменение размеров окна
+
+root.geometry("400x670+1400+450")
+
+ent_last_name = Entry_in("Фамилия")
+ent_first_name = Entry_in("Имя")
+ent_patr = Entry_in("Отчество")
+ent_date_birth = Entry_in("Дата рождения")
+ent_date_death = Entry_in("Дата смерти")
+ent_sex = Entry_in("Пол")
+
+
+def clear_all():
+    ent_first_name.delete('0', END)
+
+
+def db_inpanel():
+    panel_massiv = []
+    in_l = ent_last_name.input_panel().get()
+    in_f = ent_first_name.input_panel().get()
+    in_p = ent_patr.input_panel().get()
+    in_b = ent_date_birth.input_panel().get()
+    in_d = ent_date_death.input_panel().get()
+    in_s = ent_sex.input_panel().get()
+    if in_l and in_b and in_s:
+        in_l = check_string(in_l)
+        in_f = check_string(in_f)
+        in_p = check_string(in_p)
+        in_b = re.findall(r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}', in_b)
+        if in_b:
+            in_b = convert_data(in_b[0])
+            print(in_b)
+        in_d = re.findall(r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}', in_d)
+        print(in_d)
+        if in_d:
+            in_d = convert_data(in_d[0])
+            print(in_d)
+
+        if in_d and in_b and in_b > in_d:
+            in_b = None
+            x_t = win_inform()
+            x_t.show_warning_2()
+            ent_date_birth.input_panel().delete('0', END)
+            ent_date_death.input_panel().delete('0', END)
+        if in_s:
+            in_s = check_sex(in_s)
+        print(in_l, in_f, in_p, in_b, in_d, in_s)
+        if in_l and in_b and in_s:
+            if not in_f:
+                in_f = None
+            if not in_p:
+                in_p = None
+            if not in_d:
+                in_d = None
+            panel_massiv.append((in_l, in_f, in_p, in_b, in_d, in_s))
+            add_file_db(panel_massiv)
+
+            ent_last_name.input_panel().delete('0', END)
+            ent_first_name.input_panel().delete('0', END)
+            ent_patr.input_panel().delete('0', END)
+            ent_date_birth.input_panel().delete('0', END)
+            ent_date_death.input_panel().delete('0', END)
+            ent_sex.input_panel().delete('0', END)
+        else:
+            x_t = win_inform()
+            x_t.show_warning_1()
+    else:
+        x_t = win_inform()
+        x_t.show_warning_1()
+
+
+btn = Button(text="Ok", height=1, width=10, fg="black", font='14', command=db_inpanel)
+btn.pack(side=TOP)
+btn.place(x=160, y=510)
+
+
 #
-# root = Tk()
-# root.title('Жильцы микрорайона Победа')
-# root.resizable = (False, False) # запрет на изменение размеров окна
-#
-# root.geometry("400x670+1400+450")
-#
-# ent_last_name = Entry_in("Фамилия")
-# ent_first_name = Entry_in("Имя")
-# ent_patr = Entry_in("Отчество")
-# ent_date_birth = Entry_in("Дата рождения")
-# ent_date_death = Entry_in("Дата смерти")
-# ent_sex = Entry_in("Пол")
-#
-#
-# def clear_all():
-#     ent_first_name.delete('0', END)
-#
-#
-# def db_inpanel():
-#     panel_massiv = []
-#     in_l = ent_last_name.input_panel().get()
-#     in_f = ent_first_name.input_panel().get()
-#     in_p = ent_patr.input_panel().get()
-#     in_b = ent_date_birth.input_panel().get()
-#     in_d = ent_date_death.input_panel().get()
-#     in_s = ent_sex.input_panel().get()
-#     if in_l and in_b and in_s:
-#         in_l = check_string(in_l)
-#         in_f = check_string(in_f)
-#         in_p = check_string(in_p)
-#         in_b = re.findall(r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}', in_b)
-#         if in_b:
-#             in_b = convert_data(in_b[0])
-#             print(in_b)
-#         in_d = re.findall(r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}', in_d)
-#         print(in_d)
-#         if in_d:
-#             in_d = convert_data(in_d[0])
-#             print(in_d)
-#
-#         if in_d and in_b and in_b > in_d:
-#             in_b = None
-#             x_t = win_inform()
-#             x_t.show_warning_2()
-#             ent_date_birth.input_panel().delete('0', END)
-#             ent_date_death.input_panel().delete('0', END)
-#         if in_s:
-#             in_s = check_sex(in_s)
-#         print(in_l, in_f, in_p, in_b, in_d, in_s)
-#         if in_l and in_b and in_s:
-#             if not in_f:
-#                 in_f = None
-#             if not in_p:
-#                 in_p = None
-#             if not in_d:
-#                 in_d = None
-#             panel_massiv.append((in_l, in_f, in_p, in_b, in_d, in_s))
-#             add_file_db(panel_massiv)
-#
-#             ent_last_name.input_panel().delete('0', END)
-#             ent_first_name.input_panel().delete('0', END)
-#             ent_patr.input_panel().delete('0', END)
-#             ent_date_birth.input_panel().delete('0', END)
-#             ent_date_death.input_panel().delete('0', END)
-#             ent_sex.input_panel().delete('0', END)
-#         else:
-#             x_t = win_inform()
-#             x_t.show_warning_1()
-#     else:
-#         x_t = win_inform()
-#         x_t.show_warning_1()
-#
-#
-# btn = Button(text="Ok", height=1, width=10, fg="black", font='14', command=db_inpanel)
-# btn.pack(side=TOP)
-# btn.place(x=160, y=510)
+# s = insert_in_db('Жители района.xlsx')
+# print("Загружено строк из файла .xlsx:", s)
 
 
 
-# oper_massiv = {"/": 0, "*": 0, "+": 0, "-": 0, "%": 0}
-# check_key = {"key": 0}
 
-s = insert_in_db('Жители района.xlsx')
-print("Загружено строк из файла .xlsx:", s)
+# c = db_check_out('из')
+# print(len(c), c)
 
-c = db_check_out('из')
-print(len(c), c)
-
-# root.mainloop()
+root.mainloop()

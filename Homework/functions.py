@@ -37,8 +37,6 @@ def convert_data(data):
         return []
 
 
-
-
 # состоит ли строка из букв и если да, то перевод первой буквы в верхний регистр
 def check_string(string_in):
     if not string_in:
@@ -96,7 +94,6 @@ def load_fromfile(file_xlsx):
                         if not c_4:
                             c_4 = None
                         massiv_add.append((c_0, c_1, c_2, c_3, c_4, c_5))
-                    continue
 
                 except IndexError:
                     pass
