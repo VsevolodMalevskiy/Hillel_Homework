@@ -54,38 +54,44 @@ root = Tk()
 root.title('Жильцы микрорайона Победа')
 # root.resizable = (False, False) # запрет на изменение размеров окна
 
-root.geometry("400x670+1400+450")
-
-ent_last_name = Entry_in("Имя")
-ent_last_name = Entry_in("Фамилия")
-ent_patr = Entry_in("Отчество")
-ent_date_birth = Entry_in("Дата рождения")
-ent_date_death = Entry_in("Дата смерти")
-ent_sex = Entry_in("Пол")
-
-def push_button():
-    x = ent_last_name.get()
-    print(x.get())
-
-btn = Button(text="Ok", height=1, width=10, fg="black", font='14', command=push_button)
-btn.pack(side=TOP)
-btn.place(x=160, y=510)
-
-
-
-
-
-
-oper_massiv = {"/": 0, "*": 0, "+": 0, "-": 0, "%": 0}
-check_key = {"key": 0}
-
-
-
-
-# s = insert_in_db('Жители района.xlsx')
-# print("Загружено строк из файла .xlsx:", s)
+# root.geometry("400x670+1400+450")
 #
-# c = db_check_out('из')
-# print(len(c), c)
+# ent_first_name = Entry_in("Имя")
+# ent_last_name = Entry_in("Фамилия")
+# ent_patr = Entry_in("Отчество")
+# ent_date_birth = Entry_in("Дата рождения")
+# ent_date_death = Entry_in("Дата смерти")
+# ent_sex = Entry_in("Пол")
+#
+# def push_button():
+#     x = ent_first_name.get()
+#     print(x.get())
+#
+# def db_inpanel():
+#     in_n = ent_first_name.get()
+#     in_ = ent_last_name.get()
+#
+#
+#
+#
+#
+#
+# btn = Button(text="Ok", height=1, width=10, fg="black", font='14', command=push_button)
+# btn.pack(side=TOP)
+# btn.place(x=160, y=510)
+#
+#
+#
+# oper_massiv = {"/": 0, "*": 0, "+": 0, "-": 0, "%": 0}
+# check_key = {"key": 0}
+#
+# root.mainloop()
 
-root.mainloop()
+
+s = insert_in_db('Жители района.xlsx')
+print("Загружено строк из файла .xlsx:", s)
+
+c = db_check_out('из')
+print(len(c), c)
+
+

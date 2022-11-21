@@ -111,8 +111,8 @@ def insert_in_db(file_excel):
         # создается таблица, если ранее не была создана, создается столбец users-id с уникальными ключами
         cur.execute("""CREATE TABLE IF NOT EXISTS users(
             user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            FirstName NVARCHAR(20) NOT NULL,
-            LastName NVARCHAR(20),
+            LastName NVARCHAR(20) NOT NULL,
+            FirstName NVARCHAR(20),            
             Patronymic NVARCHAR(20),
             Data_Birth DATE NOT NULL,
             Data_Death DATE,
@@ -123,7 +123,7 @@ def insert_in_db(file_excel):
         massiv_xlsx = load_fromfile(file_excel)
 
         # Добавление строк из файла xls
-        table_insert = """INSERT INTO users(FirstName, LastName, Patronymic, Data_Birth, Data_Death, Sex)
+        table_insert = """INSERT INTO users(LastName, FirstName, Patronymic, Data_Birth, Data_Death, Sex)
               VALUES (?, ?, ?, ?, ?, ?);"""
 
         cur.executemany(table_insert, massiv_xlsx)
@@ -140,21 +140,21 @@ def db_check_out(part):
           SELECT *
             FROM users           
             WHERE FirstName LIKE ? 
-            GROUP BY FirstName, LastName, Patronymic, Data_Birth, Data_Death, Sex
+            GROUP BY LastName, FirstName, Patronymic, Data_Birth, Data_Death, Sex
         """
 
         search_sql_last = """
               SELECT *
                 FROM users           
                 WHERE LastName LIKE ? 
-                GROUP BY FirstName, LastName, Patronymic, Data_Birth, Data_Death, Sex
+                GROUP BY LastName, FirstName, Patronymic, Data_Birth, Data_Death, Sex
             """
 
         search_sql_petron = """
               SELECT *
                 FROM users           
                 WHERE Patronymic LIKE ? 
-                GROUP BY FirstName, LastName, Patronymic, Data_Birth, Data_Death, Sex
+                GROUP BY LastName, FirstName, Patronymic, Data_Birth, Data_Death, Sex
             """
 
         x = 'ив'
