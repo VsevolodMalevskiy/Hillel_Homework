@@ -8,28 +8,36 @@ import sqlite3 as sq
 def foo(data_check):
     try:
         datetime.date(int(data_check[0:4]), int(data_check[5:7]), int(data_check[8:]))
-        if int(data_check[0:4]) <= datetime.datetime.now().year and\
+        if int(data_check[0:4]) == datetime.datetime.now().year and\
             int(data_check[5:7]) <= datetime.datetime.now().month\
              and int(data_check[8:]) <= datetime.datetime.now().day:
              return data_check
+        elif int(data_check[0:4]) < datetime.datetime.now().year:
+            return data_check
     except:
         return None
 
 
 # функция перевода дат в формат SQL с отсеиванием некорректных дат
 def convert_data(data):
-    z = data.replace(" ", ".").replace("/", ".").replace("-", ".")
-    if z.index(".") == 1:
-        if z[2:].index(".") == 1:
-            z = "0" + z[0:2] + "0" + z[2:4] + z[4:]
-        else:
-            z = "0" + z[0:2] + z[2:4] + z[4:]
-    if z.index(".") == 2 and z[3:].index(".") == 1:
-        z = z[0:3] + "0" + z[3:4] + z[4:]
-    if z.index(".") == 2:
-        z = z[6:]+z[2:6]+z[0:2]
-    z = foo(z)
-    return z
+    try:
+        z = data.replace(" ", ".").replace("/", ".").replace("-", ".")
+        if z.index(".") == 1:
+            if z[2:].index(".") == 1:
+                z = "0" + z[0:2] + "0" + z[2:4] + z[4:]
+            else:
+                z = "0" + z[0:2] + z[2:4] + z[4:]
+        if z.index(".") == 2 and z[3:].index(".") == 1:
+            z = z[0:3] + "0" + z[3:4] + z[4:]
+        if z.index(".") == 2:
+            z = z[6:] + z[2:6] + z[0:2]
+        z = foo(z)
+        return z
+    except:
+        return []
+
+
+
 
 # состоит ли строка из букв и если да, то перевод первой буквы в верхний регистр
 def check_string(string_in):
@@ -68,28 +76,28 @@ def load_fromfile(file_xlsx):
                     c_3 = re.findall(r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}', str(sheet[row][col].value))
                     c_4 = re.findall(r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}', str(sheet[row][col + 1].value))
 
-                    if not c_3:
-                        pass
-                    else:
+                    if c_3:
                         c_3 = convert_data(c_3[0])
+                    if c_4:
+                        c_4 = convert_data(c_4[0])
+                    if c_3 and c_4 and c_3 > c_4:
+                        c_3 = None
+                        c_4 = None
+                    c_0 = check_string(sheet[row][col - 3].value)
+                    c_1 = check_string(sheet[row][col - 2].value)
+                    c_2 = check_string(sheet[row][col - 1].value)
+                    c_5 = check_sex(sheet[row][col + 2].value)
 
-                        if c_4:
-                            c_4 = convert_data(c_4[0])
-
-                            if c_3 > c_4:
-                                c_3 = None
-                                c_4 = None
-                        else:
+                    if c_0 and c_3 and c_5:
+                        if not c_1:
+                            c_1 = None
+                        if not c_2:
+                            c_2 = None
+                        if not c_4:
                             c_4 = None
+                        massiv_add.append((c_0, c_1, c_2, c_3, c_4, c_5))
+                    continue
 
-                        c_0 = check_string(sheet[row][col - 3].value)
-                        c_1 = check_string(sheet[row][col - 2].value)
-                        c_2 = check_string(sheet[row][col - 1].value)
-                        c_5 = check_sex(sheet[row][col + 2].value)
-
-                        if c_0 and c_3 and c_5:
-                            massiv_add.append((c_0, c_1, c_2, c_3, c_4, c_5))
-                        continue
                 except IndexError:
                     pass
                 finally:
@@ -99,8 +107,24 @@ def load_fromfile(file_xlsx):
         finally:
             continue
     return massiv_add
-    # print(massiv_add)
-    # print(len(massiv_add))
+
+
+# открытие базы данных
+def open_db():
+    with sq.connect("residents.db") as data_base:
+        cur = data_base.cursor()
+
+        # создается таблица, если ранее не была создана, создается столбец users-id с уникальными ключами
+        cur.execute("""CREATE TABLE IF NOT EXISTS users(
+            user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            LastName NVARCHAR(20) NOT NULL,
+            FirstName NVARCHAR(20),            
+            Patronymic NVARCHAR(20),
+            Data_Birth DATE NOT NULL,
+            Data_Death DATE,
+            Sex NVARCHAR(4) NOT NULL
+        )""")
+        data_base.commit()
 
 
 # Загрузка в базу данных списка из файла .xlsx
@@ -130,6 +154,30 @@ def insert_in_db(file_excel):
         data_base.commit()
     cur.close()
     return len(massiv_xlsx)
+
+
+# добавление данных из панели в базу данных
+def add_file_db(data_panel):
+    with sq.connect("residents.db") as data_base:
+        cur = data_base.cursor()
+
+        # создается таблица, если ранее не была создана, создается столбец users-id с уникальными ключами
+        cur.execute("""CREATE TABLE IF NOT EXISTS users(
+            user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            LastName NVARCHAR(20) NOT NULL,
+            FirstName NVARCHAR(20),            
+            Patronymic NVARCHAR(20),
+            Data_Birth DATE NOT NULL,
+            Data_Death DATE,
+            Sex NVARCHAR(4) NOT NULL
+        )""")
+        data_base.commit()
+
+    table_insert = """INSERT INTO users(LastName, FirstName, Patronymic, Data_Birth, Data_Death, Sex)
+                  VALUES (?, ?, ?, ?, ?, ?);"""
+
+    cur.executemany(table_insert, data_panel)
+    data_base.commit()
 
 
 # Поиск в базе данных по ключу
