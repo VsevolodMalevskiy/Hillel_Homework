@@ -53,7 +53,8 @@ import os.path
 root = Tk()
 root.title('Жильцы микрорайона Победа')
 root.resizable = (False, False) # запрет на изменение размеров окна
-root.geometry("400x670+1400+350")
+# root.geometry("400x670+1400+350")
+root.geometry("400x670+50+50")
 
 
 ent_last_name = Entry_in("Фамилия*")
@@ -133,7 +134,12 @@ def db_inpanel():
 def search_persons():
     in_search = ent_search.input_panel().get()
     if in_search:
-        search_list = db_check_out(in_search)
+        try:
+            search_list = db_check_out(in_search)
+        except:
+            x_d = win_inform()
+            x_d.show_warning("БД не создана")
+            return
         if not search_list:
             x_t = win_inform()
             x_t.show_warning("Записи в БД не найдены")
