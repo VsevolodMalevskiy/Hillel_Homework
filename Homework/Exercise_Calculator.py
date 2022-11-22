@@ -372,11 +372,10 @@ def del_error(tab):
         check_key["key"] = 1
         clear_all()
         insert(z)
-        addition()
     else:
         clear_all()
         insert(z[:-1])
-        addition()
+
 
 
 def equals_e(eveny):
@@ -384,15 +383,19 @@ def equals_e(eveny):
 
 def division_e(event):
     del_error("/")
+    division()
 
 def multiplication_e(event):
     del_error("*")
+    multiplication()
 
 def subtraction_e(event):
     del_error("-")
+    subtraction()
 
 def addition_e(event):
     del_error("+")
+    addition()
 
 
 def clear_e(event):
