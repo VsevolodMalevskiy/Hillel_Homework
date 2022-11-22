@@ -217,7 +217,7 @@ def db_check_out(part):
     return db_list
 
 
-def convert_data(data):
+def convert_data_1(data):
     data_c = data[8:]+data[4:8]+data[:4]
     return data_c
 
@@ -232,9 +232,9 @@ def preparation(list_pr):
         out_3 = list_pr[3].title()
     else:
         out_3 = ''
-    out_4 = convert_data(list_pr[4])
+    out_4 = convert_data_1(list_pr[4])
     if list_pr[5]:
-        out_5 = convert_data(list_pr[5])
+        out_5 = convert_data_1(list_pr[5])
         age = int(out_5[6:]) - int(out_4[6:])
         if int(out_5[3:5]) < int(out_4[3:5]):
             age -= 1

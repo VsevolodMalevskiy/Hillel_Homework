@@ -42,21 +42,13 @@
 # производить поиск по уже введённым данным;
 # правильно рассчитывать количество полных лет человека на основе даты рождения и даты смерти или текущей даты.
 
-
-import sqlite3 as sq
-import time
-
 from functions import *
 from fun_tkinter import *
 from tkinter import *
-from tkinter.ttk import Combobox
-import tkinter.messagebox as mb
-import math
 import re
 import os
 import sys
 import os.path
-
 
 root = Tk()
 root.title('Жильцы микрорайона Победа')
@@ -138,58 +130,6 @@ def db_inpanel():
         x_t.show_warning("Не заполнены все поля или формат ввода не корректный")
 
 
-# def convert_data(data):
-#     data_c = data[8:]+data[4:8]+data[:4]
-#     return data_c
-#
-#
-# def preparation(list_pr):
-#     out_1 = list_pr[1].title()
-#     if list_pr[2]:
-#         out_2 = list_pr[2].title()
-#     else:
-#         out_2 = ''
-#     if list_pr[3]:
-#         out_3 = list_pr[3].title()
-#     else:
-#         out_3 = ''
-#     out_4 = convert_data(list_pr[4])
-#     if list_pr[5]:
-#         out_5 = convert_data(list_pr[5])
-#         age = int(out_5[6:]) - int(out_4[6:])
-#         if int(out_5[3:5]) < int(out_4[3:5]):
-#             age -= 1
-#         elif int(out_5[3:5]) == int(out_4[3:5]) and int(out_5[:2]) < int(out_4[:2]):
-#             age -= 1
-#     else:
-#         out_5 = ''
-#         d_t = datetime.date.today()
-#         age = int(d_t.year) - int(out_4[6:])
-#         if int(d_t.month) < int(out_4[3:5]):
-#             age -= 1
-#         elif int(d_t.month) == int(out_4[3:5]) and int(d_t.day) < int(out_4[:2]):
-#             age -= 1
-#     out_6 = list_pr[6]
-#     if int(str(age)[-1]) == 1:
-#         let = 'год'
-#     elif int(str(age)[-1]) in [2, 3, 4]:
-#         let = 'года'
-#     else:
-#         let = 'лет'
-#
-#     if out_6 == 'мужчина':
-#         rod = 'Родился'
-#         mer = "Умер"
-#     else:
-#         rod = "Родилась"
-#         mer = 'Умерла'
-#     if not out_5:
-#         mer = ''
-#
-#     l_pr = f"{out_1} {out_2} {out_3} {age} {let}, {out_6}. {rod} {out_4}. {mer} {out_5}"
-#     return l_pr
-
-
 def search_persons():
     in_search = ent_search.input_panel().get()
     if in_search:
@@ -206,18 +146,8 @@ def search_persons():
             os.startfile(path_txt)
 
 
-
 btn_1 = Button_p(150, 610, db_inpanel, "Ok")
 btn_2 = Button_p(20, 610, file_save, "Save .xlsx")
 btn_3 = Button_p(280, 610, search_persons, "Search")
-
-
-
-# s = insert_in_db('Жители района.xlsx')
-# print("Загружено строк из файла .xlsx:", s)
-
-
-# c = db_check_out('из')
-# print(len(c), c)
 
 root.mainloop()
