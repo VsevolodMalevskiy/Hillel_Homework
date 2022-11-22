@@ -197,15 +197,15 @@ def search_persons():
             x_t.show_warning("Записи в БД не найдены")
         else:
             for string in search_list:
-                string_file = preparation(string)
-                try:
-                    with open("review.txt", "w") as file:
-                        s = file.readlines()
-                        print(s)
-
-                except FileNotFoundError:
-                    print("Невозможно открыть файл")
-                os.startfile(r'C:\Users\Vsevolod-PC\Desktop\Методы и команды\Методы File.xlsx')
+                print(preparation(string), file="review.txt")
+                # try:
+                #     with open("review.txt", "w") as file:
+                #         s = file.readlines()
+                #         print(s)
+                #
+                # except FileNotFoundError:
+                #     print("Невозможно открыть файл")
+                # os.startfile(r'C:\Users\Vsevolod-PC\Desktop\Методы и команды\Методы File.xlsx')
 
 
 
