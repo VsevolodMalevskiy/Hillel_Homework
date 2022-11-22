@@ -217,6 +217,57 @@ def db_check_out(part):
     return db_list
 
 
+def convert_data(data):
+    data_c = data[8:]+data[4:8]+data[:4]
+    return data_c
+
+
+def preparation(list_pr):
+    out_1 = list_pr[1].title()
+    if list_pr[2]:
+        out_2 = list_pr[2].title()
+    else:
+        out_2 = ''
+    if list_pr[3]:
+        out_3 = list_pr[3].title()
+    else:
+        out_3 = ''
+    out_4 = convert_data(list_pr[4])
+    if list_pr[5]:
+        out_5 = convert_data(list_pr[5])
+        age = int(out_5[6:]) - int(out_4[6:])
+        if int(out_5[3:5]) < int(out_4[3:5]):
+            age -= 1
+        elif int(out_5[3:5]) == int(out_4[3:5]) and int(out_5[:2]) < int(out_4[:2]):
+            age -= 1
+    else:
+        out_5 = ''
+        d_t = datetime.date.today()
+        age = int(d_t.year) - int(out_4[6:])
+        if int(d_t.month) < int(out_4[3:5]):
+            age -= 1
+        elif int(d_t.month) == int(out_4[3:5]) and int(d_t.day) < int(out_4[:2]):
+            age -= 1
+    out_6 = list_pr[6]
+    if int(str(age)[-1]) == 1:
+        let = 'год'
+    elif int(str(age)[-1]) in [2, 3, 4]:
+        let = 'года'
+    else:
+        let = 'лет'
+
+    if out_6 == 'мужчина':
+        rod = 'Родился'
+        mer = "Умер"
+    else:
+        rod = "Родилась"
+        mer = 'Умерла'
+    if not out_5:
+        mer = ''
+
+    l_pr = f"{out_1} {out_2} {out_3} {age} {let}, {out_6}. {rod} {out_4}. {mer} {out_5}"
+    return l_pr
+
 if __name__ == '__main__':
     a = '1972-04-13'
     b = '2022-02-12'
