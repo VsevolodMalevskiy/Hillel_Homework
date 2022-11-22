@@ -5,11 +5,12 @@ import tkinter.filedialog as fd
 
 class Entry_in():
 
-    def __init__(self, title_in):
+    def __init__(self, title_in, view=SUNKEN):
         self.title_in = title_in
+        self.view = view
         self.label = Label(text=self.title_in, width=0, height=3)
         self.label.pack()
-        self.frm = Frame(relief=SUNKEN, borderwidth=3, height=1)
+        self.frm = Frame(relief=self.view, borderwidth=3, height=1)
         self.frm.pack()
         self.entry = Entry(master=self.frm, font='arial 12', width=30, justify=RIGHT)
         self.entry.pack()
@@ -28,19 +29,13 @@ class win_inform():
         msg = "Ваши настройки сохранены"
         mb.showinfo("Информация", msg)
 
-    def show_warning_1(self):
-        msg = "Не заполнены все поля или формат ввода не корректный"
+    def show_warning(self, text_in=''):
+        msg = text_in
         mb.showwarning("Предупреждение", msg)
 
-    def show_warning_2(self):
-        msg = "Дата смерти раньше даты рождения"
-        mb.showwarning("Предупреждение", msg)
-
-    def show_warning_3(self, n):
+    def show_warning_1(self, n):
         msg = f"Добавлено записей в файл: {n}"
         mb.showwarning("Предупреждение", msg)
-
-
 
     def show_error(self):
         msg = "Приложение обнаружило неизвестную ошибку"
@@ -66,3 +61,17 @@ class File_xlsx():
         directory = fd.askdirectory(title="Открыть папку", initialdir="/")
         if directory:
             print(directory)
+
+
+class Button_p():
+    def __init__(self, x, y, com_in, text_in=''):
+        self.x = x
+        self.y = y
+        self.text_in = text_in
+        self.com_in = com_in
+        self.button = Button(text=self.text_in, height=1, width=10, fg="black", font='14', command=self.com_in)
+        self.button.pack(side=TOP)
+        self.button.place(x=self.x, y=self.y)
+
+
+

@@ -44,34 +44,44 @@
 
 
 import sqlite3 as sq
+import time
+
 from functions import *
 from fun_tkinter import *
 from tkinter import *
+from tkinter.ttk import Combobox
 import tkinter.messagebox as mb
 import math
 import re
+import os
 
 
 root = Tk()
 root.title('Жильцы микрорайона Победа')
 root.resizable = (False, False) # запрет на изменение размеров окна
-root.geometry("400x670+1400+450")
+root.geometry("400x670+1400+350")
 
-ent_last_name = Entry_in("Фамилия")
+
+ent_last_name = Entry_in("Фамилия*")
 ent_first_name = Entry_in("Имя")
 ent_patr = Entry_in("Отчество")
-ent_date_birth = Entry_in("Дата рождения")
+ent_date_birth = Entry_in("Дата рождения*")
 ent_date_death = Entry_in("Дата смерти")
-ent_sex = Entry_in("Пол")
+ent_sex = Entry_in("Пол* (муж*, жен*, f*, m*)")
+ent_search = Entry_in("Поиск")
 save_file = File_xlsx()
 
 
 def file_save():
-    path_file = File_xlsx()
-    path = path_file.choose_file()
-    amount = insert_in_db(path)
-    win = win_inform()
-    win.show_warning_3(amount)
+    try:
+        path_file = File_xlsx()
+        path = path_file.choose_file()
+        amount = insert_in_db(path)
+        win = win_inform()
+        win.show_warning_1(amount)
+    except:
+        x_t = win_inform()
+        x_t.show_warning("Не удалось сохранить данные из файла")
 
 
 def db_inpanel():
@@ -86,25 +96,20 @@ def db_inpanel():
         in_l = check_string(in_l)
         in_f = check_string(in_f)
         in_p = check_string(in_p)
-        in_b = re.findall(r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}', in_b)
+        in_b = re.findall(KEY_DATA, in_b)
         if in_b:
             in_b = convert_data(in_b[0])
-            print(in_b)
-        in_d = re.findall(r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}', in_d)
-        print(in_d)
+        in_d = re.findall(KEY_DATA, in_d)
         if in_d:
             in_d = convert_data(in_d[0])
-            print(in_d)
-
         if in_d and in_b and in_b > in_d:
             in_b = None
             x_t = win_inform()
-            x_t.show_warning_2()
+            x_t.show_warning("Дата смерти раньше даты рождения")
             ent_date_birth.input_panel().delete('0', END)
             ent_date_death.input_panel().delete('0', END)
         if in_s:
             in_s = check_sex(in_s)
-        print(in_l, in_f, in_p, in_b, in_d, in_s)
         if in_l and in_b and in_s:
             if not in_f:
                 in_f = None
@@ -121,23 +126,107 @@ def db_inpanel():
             ent_date_birth.input_panel().delete('0', END)
             ent_date_death.input_panel().delete('0', END)
             ent_sex.input_panel().delete('0', END)
-
+            x_t = win_inform()
+            x_t.show_warning("Данные загружены в БД")
         else:
             x_t = win_inform()
-            x_t.show_warning_1()
+            x_t.show_warning("Не заполнены все поля или формат ввода не корректный")
     else:
         x_t = win_inform()
-        x_t.show_warning_1()
+        x_t.show_warning("Не заполнены все поля или формат ввода не корректный")
 
 
-btn_1 = Button(text="Ok", height=1, width=10, fg="black", font='14', command=db_inpanel)
-btn_1.pack(side=TOP)
-btn_1.place(x=160, y=510)
+def convert_data(data):
+    data_c = data[8:]+data[4:8]+data[:4]
+    return data_c
 
 
-btn_2 = Button(text="Ok", height=1, width=10, fg="black", font='14', command=file_save)
-btn_2.pack(side=TOP)
-btn_2.place(x=0, y=510)
+def preparation(list_pr):
+    out_1 = list_pr[1].title()
+    if list_pr[2]:
+        out_2 = list_pr[2].title()
+    else:
+        out_2 = ''
+    if list_pr[3]:
+        out_3 = list_pr[3].title()
+    else:
+        out_3 = ''
+    out_4 = convert_data(list_pr[4])
+    if list_pr[5]:
+        out_5 = convert_data(list_pr[5])
+        age = int(out_5[6:]) - int(out_4[6:])
+        if int(out_5[3:5]) < int(out_4[3:5]):
+            age -= 1
+        elif int(out_5[3:5]) == int(out_4[3:5]) and int(out_5[:2]) < int(out_4[:2]):
+            age -= 1
+    else:
+        out_5 = ''
+        d_t = datetime.date.today()
+        age = int(d_t.year) - int(out_4[6:])
+        if int(d_t.month) < int(out_4[3:5]):
+            age -= 1
+        elif int(d_t.month) == int(out_4[3:5]) and int(d_t.day) < int(out_4[:2]):
+            age -= 1
+    out_6 = list_pr[6]
+    if int(str(age)[-1]) == 1:
+        let = 'год'
+    elif int(str(age)[-1]) in [2, 3, 4]:
+        let = 'года'
+    else:
+        let = 'лет'
+
+    if out_6 == 'мужчина':
+        rod = 'Родился'
+        mer = "Умер"
+    else:
+        rod = "Родилась"
+        mer = 'Умерла'
+    if not out_5:
+        mer = ''
+
+    l_pr = f"{out_1} {out_2} {out_3} {age} {let}, {out_6}. {rod} {out_4}. {mer} {out_5}"
+    return l_pr
+
+
+def search_persons():
+    in_search = ent_search.input_panel().get()
+    if in_search:
+        search_list = db_check_out(in_search)
+        if not search_list:
+            x_t = win_inform()
+            x_t.show_warning("Записи в БД не найдены")
+        else:
+            for string in search_list:
+                string_file = preparation(string)
+                try:
+                    with open("review.txt", "w") as file:
+                        s = file.readlines()
+                        print(s)
+
+                except FileNotFoundError:
+                    print("Невозможно открыть файл")
+                os.startfile(r'C:\Users\Vsevolod-PC\Desktop\Методы и команды\Методы File.xlsx')
+
+
+
+
+
+
+
+
+
+
+
+
+# Евгений Крут Михайлович  20 лет, мужчина. Родился: 12.10.1980. Умер: 11.10.2001.
+
+
+
+
+btn_1 = Button_p(150, 610, db_inpanel, "Ok")
+btn_2 = Button_p(20, 610, file_save, "Save .xlsx")
+btn_3 = Button_p(280, 610, search_persons, "Search")
+
 
 
 # s = insert_in_db('Жители района.xlsx')

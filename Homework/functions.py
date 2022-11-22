@@ -3,6 +3,7 @@ import openpyxl
 import re
 import sqlite3 as sq
 
+KEY_DATA = r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}'
 
 # функция проверки существования даты до текущего момента
 def foo(data_check):
@@ -71,8 +72,8 @@ def load_fromfile(file_xlsx):
         try:
             for col in range(0, 9):
                 try:
-                    c_3 = re.findall(r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}', str(sheet[row][col].value))
-                    c_4 = re.findall(r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}', str(sheet[row][col + 1].value))
+                    c_3 = re.findall(KEY_DATA, str(sheet[row][col].value))
+                    c_4 = re.findall(KEY_DATA, str(sheet[row][col + 1].value))
 
                     if c_3:
                         c_3 = convert_data(c_3[0])
@@ -202,9 +203,8 @@ def db_check_out(part):
                 GROUP BY LastName, FirstName, Patronymic, Data_Birth, Data_Death, Sex
             """
 
-        x = 'ив'
-        search_string = []
-        search_string.append(f"%{x}%")
+        x = r'%'+part.strip()+r'%'
+        search_string = [x]
 
         db_1 = cur.execute(search_sql_first, search_string).fetchall()
         db_2 = cur.execute(search_sql_last, search_string).fetchall()
