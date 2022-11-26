@@ -16,6 +16,7 @@ for item in x:
 
 print("_" * 40)
 
+
 # print(next(x))  # проверка окончания итерации, исключение StopIteration
 
 
