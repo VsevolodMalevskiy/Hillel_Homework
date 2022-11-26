@@ -108,8 +108,8 @@ w = x * 2
 e = y - 3
 r = z ** 2
 
-d = w + e + r
-print("сумма обработанных числе =", d)
+massiv_add = w + e + r
+print("сумма обработанных числе =", massiv_add)
 """
 
 """# 17
@@ -120,10 +120,10 @@ x = float(input("Введите x="))
 y = float(input("Введите y="))
 z = float(input("Введите z="))
 
-d = (x + y + z)/3
+massiv_add = (x + y + z)/3
 s = (x + z) * 2 - y * 3
 
-print("Среднее арифметическое =", d)
+print("Среднее арифметическое =", massiv_add)
 print("Расчетное значение = ", s)"""
 
 """# 18
@@ -241,11 +241,11 @@ a = float(input("Введите число a = "))
 b = float(input("Введите число b = "))
 c = float(input("Введите число c = "))
 
-d = [a, b, c]
+massiv_add = [a, b, c]
 
-a = d[0] + d[1]
-b = d[2] - d[0]
-c = sum(d)
+a = massiv_add[0] + massiv_add[1]
+b = massiv_add[2] - massiv_add[0]
+c = sum(massiv_add)
 
 print("a =", a)
 print("b =", b)
@@ -551,21 +551,21 @@ y = int(input("Ввведите число y: "))
 z = int(input("Ввведите число z: "))
 w = int(input("Ввведите число w: "))
 
-d = [x,y,z,w]
-d.sort()
+massiv_add = [x,y,z,w]
+massiv_add.sort()
 
-while d[3] % 2 != 0:
-    d.insert(0, 0)
-    d.pop()
+while massiv_add[3] % 2 != 0:
+    massiv_add.insert(0, 0)
+    massiv_add.pop()
 
-d.sort()
-if x % 2 == 0 and x == d[3]:
+massiv_add.sort()
+if x % 2 == 0 and x == massiv_add[3]:
     print("Наибольшее число x =", x)
-elif y % 2 == 0 and y == d[3]:
+elif y % 2 == 0 and y == massiv_add[3]:
     print("Наибольшее число y =", y)
-elif z % 2 == 0 and z == d[3]:
+elif z % 2 == 0 and z == massiv_add[3]:
     print("Наибольшее число z =", z)
-elif w % 2 == 0 and w == d[3]:
+elif w % 2 == 0 and w == massiv_add[3]:
     print("Наибольшее число w =", w)
 else:
     print("not found")"""

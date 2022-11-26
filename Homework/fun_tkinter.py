@@ -52,7 +52,7 @@ class File_xlsx():
     def choose_file(self):
         filetypes = (("База данных", "*.xlsx"),
                      ("Любой", "*"))
-        filename = fd.askopenfilename(title="Открыть файл", initialdir="/",
+        filename = fd.askopenfilename(title="Загрузить файл", initialdir="/",
                                       filetypes=filetypes)
         if filename:
             return filename

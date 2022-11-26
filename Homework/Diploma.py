@@ -153,7 +153,7 @@ def search_persons():
 
 
 btn_1 = Button_p(150, 610, db_inpanel, "Ok")
-btn_2 = Button_p(20, 610, file_save, "Save .xlsx")
+btn_2 = Button_p(20, 610, file_save, "Load .xlsx")
 btn_3 = Button_p(280, 610, search_persons, "Search")
 
 root.mainloop()

@@ -5,7 +5,7 @@
 # Данный вызов построково сравнивает текстовый файл test1.txt, который
 # находится по тому же пути, что и запускаемый скрипт с текстовым файлом
 # test2.txt который находится по пути: c:\temp\
-# 2. Код можно запустить с ключами -f, -t и -d.
+# 2. Код можно запустить с ключами -f, -t и -massiv_add.
 # а) Если код запускается с ключём -f то после него указывается шаблоном по
 # которому в текущей директории и во всех поддиректориях будут искаться файлы.
 # При этом если в имени использовать знак * - это означает любое количество любых
@@ -20,26 +20,26 @@
 # python exercise_spez_2.py -f "*.txt" -t "искомый текст"
 # Данный вызов находит все файлы с расширением txt в текущей директории в которых
 # есть текст "искомый текст".
-# в) Так же скрипт можно запустить одновременно с ключом -f и ключом -d, после
+# в) Так же скрипт можно запустить одновременно с ключом -f и ключом -massiv_add, после
 # которого необходимо указать путь директории в которой будет осуществляться поиск
 # файлов по заданному шаблону, а так же во всех её поддиректориях. Пример:
-# python exercise_spez_2.py -f "*.txt" -d "c:\user\main"
+# python exercise_spez_2.py -f "*.txt" -massiv_add "c:\user\main"
 # В этом случае файлы по шаблону *.txt будут искаться в директории по пути
 # c:\user\main, а так же по всех её поддиректориях.
-# Если после ключа -d указать знак "/", то поиск по заданному файлов шаблону
+# Если после ключа -massiv_add указать знак "/", то поиск по заданному файлов шаблону
 # будет осуществляться только в текущей диретории. Пример:
-# python exercise_spez_2.py -f "*.txt" -d \
-# Таким образом значение ключ -f всегда обязателен для поиска, а вот ключи -t и -d,
+# python exercise_spez_2.py -f "*.txt" -massiv_add \
+# Таким образом значение ключ -f всегда обязателен для поиска, а вот ключи -t и -massiv_add,
 # при этом они могут использоваться как по одному, так и вместе в одном запросе:
-# python exercise_spez_2.py -f "*.txt" -t "искомый текст" -d \
+# python exercise_spez_2.py -f "*.txt" -t "искомый текст" -massiv_add \
 # Чтение ключей необходимо сделать при помощи библиотеки (argparse).
 # Описание библиотеки os:
 # https://pythonworld.ru/moduli/modul-os.html
 # https://pythonworld.ru/moduli/modul-os-path.html
 
-# 1. python homework\exercise_spez_2.py -f '?.txt' -d 'c:\temp'
+# 1. python homework\exercise_spez_2.py -f '?.txt' -massiv_add 'c:\temp'
 # 2. python homework\exercise_spez_2.py -a homework\1.txt -s 2.txt
-# 3. python homework\exercise_spez_2.py -f '?.txt' -t 'храниться до 2 лет' -d 'c:\temp'
+# 3. python homework\exercise_spez_2.py -f '?.txt' -t 'храниться до 2 лет' -massiv_add 'c:\temp'
 
 import os
 import os.path
@@ -53,7 +53,7 @@ def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', metavar='--text', type=str, help='Needed text in file')
     parser.add_argument('-f', metavar='--file', type=str, help='Pattern of finding file')
-    parser.add_argument('-d', metavar='--directory', type=str, help='Start directory to find')
+    parser.add_argument('-massiv_add', metavar='--directory', type=str, help='Start directory to find')
 
     return parser.parse_args()
 
@@ -131,6 +131,6 @@ else:
 
 
 
-# 1. python homework\exercise_spez_2_old.py -f '?.txt' -d 'c:\temp'
+# 1. python homework\exercise_spez_2_old.py -f '?.txt' -massiv_add 'c:\temp'
 # 2. python homework\exercise_spez_2_old.py homework\1.txt 2.txt
-# 3. python homework\exercise_spez_2_old.py -f '?.txt' -t 'храниться до 2 лет' -d 'c:\temp'
+# 3. python homework\exercise_spez_2_old.py -f '?.txt' -t 'храниться до 2 лет' -massiv_add 'c:\temp'

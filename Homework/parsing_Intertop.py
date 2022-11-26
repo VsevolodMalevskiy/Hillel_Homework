@@ -57,11 +57,11 @@ while True:
     list_2 = list_adress(https_temp2, price_temp2)
 
     if collections.Counter(list_1) == collections.Counter(list_2):
-        print(datetime.datetime.strftime(datetime.datetime.now(), '%d.%m.%Y %H.%M.%S'))
+        print(datetime.datetime.strftime(datetime.datetime.now(), '%massiv_add.%m.%Y %H.%M.%S'))
         print("Обновлений нет!")
         list_1 = copy.deepcopy(list_2)
     else:
-        print(datetime.datetime.strftime(datetime.datetime.now(), '%d.%m.%Y %H.%M.%S'))
+        print(datetime.datetime.strftime(datetime.datetime.now(), '%massiv_add.%m.%Y %H.%M.%S'))
         print("Есть обновления!!!")
         print(set(list_1).difference(set(list_2)))
         print(set(list_2).difference(set(list_1)))
