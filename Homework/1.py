@@ -32,18 +32,19 @@ while True:
 
 
 while True:
-    in_db = input("Ввведите дату рождения: ", )
+    in_db = input("Введите дату рождения: ", )
     f_db = data_in(in_db)
     if f_db:  # проверяет что из функции вернулась дата
         break
 
 
 while True:
-    in_dd = input("Ввведите дату смерти: ", )
+    in_dd = input("Введите дату смерти: ", )
     f_dd = data_in(in_dd)
     if f_dd or not in_dd:  # проверяет что из функции вернулась дата
         break
 
+print("_" * 30)
 print(in_f)
 print(in_n)
 print(in_o)
