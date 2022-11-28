@@ -158,7 +158,7 @@ def button_e():
         ent_scan.delete('0', END)
 
 
-# окно поска
+# окно поиска по шаблону
 def win_s():
     win = Toplevel(root,  bd=10, bg="lightblue")
     win.title("Окно поиска")
@@ -169,9 +169,79 @@ def win_s():
     global ent_scan
     ent_scan = Entry(master=frm, font='arial 14', width=30, justify=RIGHT)
     ent_scan.pack()
+
     button = Button(win, text="Искать", height=1, width=10, fg="black", font='14', command=button_e)
     button.pack(side=TOP)
     button.place(x=120, y=50)
+
+
+# окно поиска по дате
+def win_d():
+    win = Toplevel(root,  bd=10, bg="lightblue")
+    win.title("Окно поиска по дате")
+    win.geometry("350x200+500+550")
+
+    label = Label(win, text="Диапазон должен быть в формате: \n 'от  до' (5  25) или 'до' (47)",
+                  width=0, height=5, bg="lightblue")
+    label.pack()
+
+    frm = Frame(win, relief=SUNKEN, borderwidth=5, height=1)
+    frm.pack()
+    global ent_o_scan
+    ent_o_scan = Entry(master=frm, font='arial 14', width=30, justify=RIGHT)
+    ent_o_scan.pack()
+
+    button = Button(win, text="Искать", height=1, width=10, fg="black", font='14', command=button_o)
+    button.pack(side=TOP)
+    button.place(x=120, y=145)
+
+
+def outgoing(massiv, end, start=0):
+    data_old = []
+    for item in massiv:
+        data = datetime.datetime.strptime(item[4], "%Y-%m-%d").date()
+        now_ = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d")
+        now = datetime.datetime.strptime(now_, "%Y-%m-%d").date()
+        diff = (now - data)
+        if int(diff.days)//365 in range(start, end+1):
+            list(item).pop(0)
+            data_old.append(tuple(item))
+    if not data_old:
+        x_t = win_inform()
+        x_t.show_warning("Записи в БД не найдены")
+    else:
+        with open("reviev.txt", "w") as file_txt:
+            for string in data_old:
+                print(preparation(string), file=file_txt)
+        file_txt.close()
+        path_txt = os.path.join(sys.path[0], "reviev.txt")
+        os.startfile(path_txt)
+
+
+def button_o():
+    try:
+        data_old = search_alive()
+        print(data_old)
+    except:
+        x_d = win_inform()
+        x_d.show_warning("БД не создана")
+        return
+
+    x = ent_o_scan.get().split()
+    if x and len(x) == 1 and x[0].isdigit() and float(x[0]) in range(101):
+        end = int(float(x[0]))
+        print(end)
+        outgoing(data_old, end)
+    elif x and len(x) == 2 and x[0].isdigit() and float(x[0]) in range(101) and x[1].isdigit() and float(x[1])\
+        in range(101) and float(x[0]) < float(x[1]):
+        start = int(float(x[0]))
+        end = int(float(x[1]))
+        print(start, end)
+        outgoing(data_old, end, start)
+    else:
+        x_d = win_inform()
+        x_d.show_warning("Не правильный формат ввода")
+    ent_o_scan.delete('0', END)
 
 
 btn_1 = Button_p(150, 500, db_inpanel, "Ввод в БД")
@@ -187,6 +257,7 @@ file_menu.add_command(label="Загрузить из файла", command=file_s
 
 menu_bar.add_cascade(label="Поиск", menu=search_menu)
 search_menu.add_command(label="Поиск по шаблону", command=win_s)
+search_menu.add_command(label="Поиск по возрасту (start, end)", command=win_d)
 search_menu.add_command(label="Вывести всю БД", command=search_in_sql)
 search_menu.add_command(label="Список умерших", command=death)
 search_menu.add_command(label="Список живых", command=alive)
