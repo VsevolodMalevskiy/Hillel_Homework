@@ -221,7 +221,6 @@ def outgoing(massiv, end, start=0):
 def button_o():
     try:
         data_old = search_alive()
-        print(data_old)
     except:
         x_d = win_inform()
         x_d.show_warning("БД не создана")
@@ -230,13 +229,11 @@ def button_o():
     x = ent_o_scan.get().split()
     if x and len(x) == 1 and x[0].isdigit() and float(x[0]) in range(101):
         end = int(float(x[0]))
-        print(end)
         outgoing(data_old, end)
     elif x and len(x) == 2 and x[0].isdigit() and float(x[0]) in range(101) and x[1].isdigit() and float(x[1])\
         in range(101) and float(x[0]) < float(x[1]):
         start = int(float(x[0]))
         end = int(float(x[1]))
-        print(start, end)
         outgoing(data_old, end, start)
     else:
         x_d = win_inform()
