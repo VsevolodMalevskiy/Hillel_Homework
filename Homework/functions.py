@@ -2,18 +2,22 @@ import datetime
 import openpyxl
 import re
 import sqlite3 as sq
+import os
+import sys
+import os.path
+
 
 KEY_DATA = r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}'
+
 
 # функция проверки существования даты до текущего момента
 def foo(data_check):
     try:
-        datetime.date(int(data_check[0:4]), int(data_check[5:7]), int(data_check[8:]))
-        if int(data_check[0:4]) == datetime.datetime.now().year and\
-            int(data_check[5:7]) <= datetime.datetime.now().month\
-             and int(data_check[8:]) <= datetime.datetime.now().day:
-             return data_check
-        elif int(data_check[0:4]) < datetime.datetime.now().year:
+        data = datetime.datetime.strptime(data_check, "%Y-%m-%d").date()
+        now_ = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d")
+        now = datetime.datetime.strptime(now_, "%Y-%m-%d").date()
+        diff = now - data
+        if diff.days >= 0:
             return data_check
     except:
         return None
@@ -22,15 +26,15 @@ def foo(data_check):
 # функция перевода дат в формат SQL с отсеиванием некорректных дат
 def convert_data(data):
     try:
-        z = data.replace(" ", ".").replace("/", ".").replace("-", ".")
-        if z.index(".") == 1:
-            if z[2:].index(".") == 1:
+        z = data.replace(" ", "-").replace("/", "-").replace(".", "-")
+        if z.index("-") == 1:
+            if z[2:].index("-") == 1:
                 z = "0" + z[0:2] + "0" + z[2:4] + z[4:]
             else:
                 z = "0" + z[0:2] + z[2:4] + z[4:]
-        if z.index(".") == 2 and z[3:].index(".") == 1:
+        if z.index("-") == 2 and z[3:].index("-") == 1:
             z = z[0:3] + "0" + z[3:4] + z[4:]
-        if z.index(".") == 2:
+        if z.index("-") == 2:
             z = z[6:] + z[2:6] + z[0:2]
         z = foo(z)
         return z
@@ -203,7 +207,7 @@ def db_check_out(part):
                 GROUP BY LastName, FirstName, Patronymic, Data_Birth, Data_Death, Sex
             """
 
-        x = r'%'+part.strip()+r'%'
+        x = r'%'+part.strip().lower()+r'%'
         search_string = [x]
 
         db_1 = cur.execute(search_sql_first, search_string).fetchall()
@@ -217,7 +221,133 @@ def db_check_out(part):
     return db_list
 
 
+# поиск живых
+def search_alive():
+    with sq.connect("residents.db") as data_base:
+        cur = data_base.cursor()
+        search_sql_alive = """
+          SELECT *
+            FROM users           
+            WHERE Data_Death IS NULL  
+            GROUP BY LastName, FirstName, Patronymic, Data_Birth, Data_Death, Sex
+        """
+
+
+    db_al = cur.execute(search_sql_alive).fetchall()
+    db_list = list(set(db_al))
+    cur.close()
+    return db_list
+
+
+# поиск мертвых
+def search_death():
+    with sq.connect("residents.db") as data_base:
+        cur = data_base.cursor()
+        search_sql_death = """
+          SELECT *
+            FROM users           
+            WHERE Data_Death NOT NULL  
+            GROUP BY LastName, FirstName, Patronymic, Data_Birth, Data_Death, Sex
+        """
+
+
+    db_death = cur.execute(search_sql_death).fetchall()
+    db_list = list(set(db_death))
+    cur.close()
+    return db_list
+
+
+# поиск всех мужчин
+def search_men():
+    with sq.connect("residents.db") as data_base:
+        cur = data_base.cursor()
+        search_sql_men = """
+          SELECT *
+            FROM users           
+            WHERE SEX LIKE 'мужчина'
+            GROUP BY LastName, FirstName, Patronymic, Data_Birth, Data_Death, Sex
+        """
+
+
+    db_al = cur.execute(search_sql_men).fetchall()
+    db_list = list(set(db_al))
+    cur.close()
+    return db_list
+
+
+# поиск всех женщин
+def search_women():
+    with sq.connect("residents.db") as data_base:
+        cur = data_base.cursor()
+        search_sql_women = """
+          SELECT *
+            FROM users           
+            WHERE SEX LIKE 'женщина'
+            GROUP BY LastName, FirstName, Patronymic, Data_Birth, Data_Death, Sex
+        """
+
+
+    db_al = cur.execute(search_sql_women).fetchall()
+    db_list = list(set(db_al))
+    cur.close()
+    return db_list
+
+
+# поиск совершеннолетних
+def search_adult():
+    with sq.connect("residents.db") as data_base:
+        cur = data_base.cursor()
+        search_sql_adult = """
+          SELECT *
+            FROM users 
+            WHERE (julianday('now') - julianday(Data_Birth)) > 6570 AND Data_Death IS NULL
+            GROUP BY LastName, FirstName, Patronymic, Data_Birth, Data_Death, Sex          
+
+        """
+
+    db_al = cur.execute(search_sql_adult).fetchall()
+    db_list = list(set(db_al))
+    cur.close()
+    return db_list
+
+
+# вывод данных из списка
+def in_file(list):
+    with open("reviev.txt", "w") as file_txt:
+        for string in list:
+            print(preparation(string), file=file_txt)
+    file_txt.close()
+    path_txt = os.path.join(sys.path[0], "reviev.txt")
+    os.startfile(path_txt)
+
+
+# поиск и вывод мертвых
+def death():
+    in_file(search_death())
+
+
+# поиск и вывод живых
+def alive():
+    in_file(search_alive())
+
+
+# поиск и вывод мужчин
+def men():
+    in_file(search_men())
+
+
+# поиск и вывод мужчин
+def women():
+    in_file(search_women())
+
+
+# поиск и вывод совершеннолетних
+def adult():
+    in_file(search_adult())
+
+
 def convert_data_1(data):
+    data = data.replace('-', '.')
     data_c = data[8:]+data[4:8]+data[:4]
     return data_c
 
@@ -267,6 +397,8 @@ def preparation(list_pr):
 
     l_pr = f"{out_1} {out_2} {out_3} {age} {let}, {out_6}. {rod} {out_4}. {mer} {out_5}"
     return l_pr
+
+
 
 if __name__ == '__main__':
     a = '1972-04-13'

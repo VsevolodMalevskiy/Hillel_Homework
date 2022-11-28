@@ -53,8 +53,9 @@ import os.path
 root = Tk()
 root.title('Жильцы микрорайона Победа')
 root.resizable = (False, False) # запрет на изменение размеров окна
-# root.geometry("400x670+1400+350")
-root.geometry("400x670+50+50")
+# root.geometry("400x550+1400+350")
+root.geometry("400x550+50+250")
+
 
 
 ent_last_name = Entry_in("Фамилия*")
@@ -63,7 +64,6 @@ ent_patr = Entry_in("Отчество")
 ent_date_birth = Entry_in("Дата рождения*")
 ent_date_death = Entry_in("Дата смерти")
 ent_sex = Entry_in("Пол* (муж*, жен*, f*, m*)")
-ent_search = Entry_in("Поиск")
 save_file = File_xlsx()
 
 
@@ -76,7 +76,7 @@ def file_save():
         win.show_warning_1(amount)
     except:
         x_t = win_inform()
-        x_t.show_warning("Не удалось сохранить данные из файла")
+        x_t.show_warning("Не удалось загрузить данные из файла")
 
 
 def db_inpanel():
@@ -131,29 +131,70 @@ def db_inpanel():
         x_t.show_warning("Не заполнены все поля или формат ввода не корректный")
 
 
-def search_persons():
-    in_search = ent_search.input_panel().get()
-    if in_search:
-        try:
-            search_list = db_check_out(in_search)
-        except:
-            x_d = win_inform()
-            x_d.show_warning("БД не создана")
-            return
-        if not search_list:
-            x_t = win_inform()
-            x_t.show_warning("Записи в БД не найдены")
-        else:
-            with open("reviev.txt", "w") as file_txt:
-                for string in search_list:
-                    print(preparation(string), file=file_txt)
-            file_txt.close()
-            path_txt = os.path.join(sys.path[0], "reviev.txt")
-            os.startfile(path_txt)
+# вывод данных из БД в файл
+def search_in_sql(list=''):
+    try:
+        search_list = db_check_out(list)
+    except:
+        x_d = win_inform()
+        x_d.show_warning("БД не создана")
+        return
+    if not search_list:
+        x_t = win_inform()
+        x_t.show_warning("Записи в БД не найдены")
+    else:
+        with open("reviev.txt", "w") as file_txt:
+            for string in search_list:
+                print(preparation(string), file=file_txt)
+        file_txt.close()
+        path_txt = os.path.join(sys.path[0], "reviev.txt")
+        os.startfile(path_txt)
 
 
-btn_1 = Button_p(150, 610, db_inpanel, "Ok")
-btn_2 = Button_p(20, 610, file_save, "Load .xlsx")
-btn_3 = Button_p(280, 610, search_persons, "Search")
+# нажатие кнопки "Искать"
+def button_e():
+    if ent_scan.get():
+        search_in_sql(ent_scan.get())
+        ent_scan.delete('0', END)
+
+
+# окно поска
+def win_s():
+    win = Toplevel(root,  bd=10, bg="lightblue")
+    win.title("Окно поиска")
+    win.geometry("350x100+500+550")
+
+    frm = Frame(win, relief=SUNKEN, borderwidth=5, height=1)
+    frm.pack()
+    global ent_scan
+    ent_scan = Entry(master=frm, font='arial 14', width=30, justify=RIGHT)
+    ent_scan.pack()
+    button = Button(win, text="Искать", height=1, width=10, fg="black", font='14', command=button_e)
+    button.pack(side=TOP)
+    button.place(x=120, y=50)
+
+
+btn_1 = Button_p(150, 500, db_inpanel, "Ввод в БД")
+
+
+# создание меню
+menu_bar = Menu(root)
+file_menu = Menu(menu_bar, tearoff=0)
+search_menu = Menu(menu_bar, tearoff=0)
+
+menu_bar.add_cascade(label="Файл", menu=file_menu)
+file_menu.add_command(label="Загрузить из файла", command=file_save)
+
+menu_bar.add_cascade(label="Поиск", menu=search_menu)
+search_menu.add_command(label="Поиск по шаблону", command=win_s)
+search_menu.add_command(label="Вывести всю БД", command=search_in_sql)
+search_menu.add_command(label="Список умерших", command=death)
+search_menu.add_command(label="Список живых", command=alive)
+search_menu.add_command(label="Список женщин", command=women)
+search_menu.add_command(label="Список мужчин", command=men)
+search_menu.add_command(label="Список совершеннолетних", command=adult)
+
+root.config(menu=menu_bar)
+
 
 root.mainloop()
