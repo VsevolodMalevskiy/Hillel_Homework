@@ -50,6 +50,7 @@ import os
 import sys
 import os.path
 
+
 root = Tk()
 root.title('Жильцы микрорайона Победа')
 root.resizable = (False, False) # запрет на изменение размеров окна

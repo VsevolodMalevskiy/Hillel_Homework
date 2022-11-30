@@ -5,7 +5,7 @@ import sqlite3 as sq
 import os
 import sys
 import os.path
-
+from fun_tkinter import *
 
 KEY_DATA = r'\d{1,4}(?:-|.|/| )\d*(?:-|.|/| )\d{2,4}'
 
@@ -323,27 +323,52 @@ def in_file(list):
 
 # поиск и вывод мертвых
 def death():
-    in_file(search_death())
+    try:
+        in_file(search_death())
+    except:
+        x_d = win_inform()
+        x_d.show_warning("БД не создана")
+        return
 
 
 # поиск и вывод живых
 def alive():
-    in_file(search_alive())
+    try:
+        in_file(search_alive())
+    except:
+        x_d = win_inform()
+        x_d.show_warning("БД не создана")
+        return
 
 
 # поиск и вывод мужчин
 def men():
-    in_file(search_men())
+    try:
+        in_file(search_men())
+    except:
+        x_d = win_inform()
+        x_d.show_warning("БД не создана")
+        return
 
 
 # поиск и вывод мужчин
 def women():
-    in_file(search_women())
+    try:
+        in_file(search_women())
+    except:
+        x_d = win_inform()
+        x_d.show_warning("БД не создана")
+        return
 
 
 # поиск и вывод совершеннолетних
 def adult():
-    in_file(search_adult())
+    try:
+        in_file(search_adult())
+    except:
+        x_d = win_inform()
+        x_d.show_warning("БД не создана")
+        return
 
 
 def convert_data_1(data):
